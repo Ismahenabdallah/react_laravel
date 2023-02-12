@@ -9,7 +9,7 @@ export default function ListProducts() {
         await axios.get('http://localhost:8000/api/products').then((res) => {
 
             setProducts(res.data)
-            console.log('products', res.data)
+            // console.log('products', res.data)
         }).catch((err) => console.log(err))
 
     }
@@ -21,7 +21,7 @@ export default function ListProducts() {
     const deleteData = async (id) => {
 
         await axios.delete(`http://localhost:8000/api/products/${id}`).then((res) => {
-            console.log(res)
+            //console.log(res)
         }).catch((err) => console.log(err))
 
     }
