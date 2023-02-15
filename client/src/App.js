@@ -8,24 +8,17 @@ import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/js/bootstrap";
 import Login from "./components/login";
 
+
 import Register from "./components/register";
+import { useAuth } from "./context/AuthContext";
+import RequireAuth from "./context/RequireAuth";
+import Loggin from "./context/Loggin";
 function App() {
-  const logout = () => {
-    localStorage.clear();
-  };
 
-  const [loggin, setLoggin] = React.useState(false);
-  const [info, setInfo] = React.useState({});
-  const isLoggin = localStorage.getItem("isLoggin");
-  const user = localStorage.getItem("user");
-  console.log(user)
+  const { currentUser, logout } = useAuth();
+  console.log(currentUser)
 
-  React.useEffect(() => {
 
-    setInfo(JSON.parse(user));
-    setLoggin(true);
-
-  }, [user],);
   return (
     <div className="App">
       <Router>
@@ -50,7 +43,7 @@ function App() {
               id="navbarSupportedContent"
             >
               <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                {user ? (
+                {currentUser ? (
                   <>
                     <li className="nav-item">
                       <Link
@@ -66,9 +59,11 @@ function App() {
                         create product
                       </Link>
                     </li>
+
                     <li className="nav-item">
-                      <h3  >{info.name}</h3>
+                      <h3  >{currentUser.name}</h3>
                     </li>
+
                     <li className="nav-item">
                       <Link onClick={logout} className="nav-link" to="/login">
                         logout
@@ -94,11 +89,14 @@ function App() {
           </div>
         </nav>
         <Routes>
-          <Route path="/edit/:id" element={<EditProducts />} />
-          <Route path="/" element={<ListProducts />} />
-          <Route path="/create" element={<CreateProducts />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/sinup" element={<Register />} />
+          <Route path="/edit/:id" element={
+            <RequireAuth><EditProducts /></RequireAuth>
+          } />
+          <Route path="/" element={<RequireAuth><ListProducts /></RequireAuth>} />
+          <Route path="/create" element={<RequireAuth><CreateProducts /></RequireAuth>} />
+          <Route path="/login" element={<Loggin><Login /></Loggin>} />
+
+          <Route path="/sinup" element={<Loggin><Register /></Loggin>} />
         </Routes>
       </Router>
     </div>
